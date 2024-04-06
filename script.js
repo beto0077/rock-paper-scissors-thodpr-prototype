@@ -95,7 +95,7 @@ let totalRounds = 0;
 let roundsPlayed = 0;
 let userWins = 0;
 let computerWins = 0;
-let drawRounds = 0;
+let tiedRounds = 0;
 
 function getRandomChoice(choices) {
     const randomIndex = Math.floor(Math.random() * choices.length);
@@ -108,7 +108,7 @@ function compareChoices(user, computer) {
     }
 
     if (user === computer) {
-        return "draw";
+        return "tie";
     }
 
     switch (user) {
@@ -124,14 +124,19 @@ function compareChoices(user, computer) {
 }
 
 function showResults() {
-    gameStatistics.textContent = `Total rounds played: ${totalRounds} / User wins: ${userWins} / Computer wins: ${computerWins} / Tied rounds: ${drawRounds}`;
+    gameStatistics.textContent = `Total rounds played: ${totalRounds} / User wins: ${userWins} / Computer wins: ${computerWins} / Tied rounds: ${tiedRounds}`;
     let finalMessage = "";
     if (userWins === computerWins) {
-        finalMessage = "The game have ended drawn, try again.";
+        finalMessage = "The game has ended tied, try again.";
     } else {
-        finalMessage = userWins > computerWins ? "Congratulations, you've beaten the computer!" : "You lost, better luck next time.";
+        finalMessage = userWins > computerWins ? "Congratulations, you've beaten the computer!<br>" : "You lost, better luck next time.<br>";
     }
-    gameResult.textContent = `${finalMessage} Game has ended. Please start a new game.`;
+    gameResult.innerHTML = `${finalMessage}Game has ended. Please start a new game.`;
+}
+
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function endGame() {
@@ -146,12 +151,12 @@ function singleRound(userChoice) {
     console.log(`User: ${userChoice}`);
     let roundData = "";
     const winner = compareChoices(userChoice, computerChoice);
-    if (winner === "draw") {
-        drawRounds++;
-        roundData = `Tie, both chose the same. ${userChoice} and ${computerChoice}`;
+    if (winner === "tie") {
+        tiedRounds++;
+        roundData = `Tie, both chose the same. ${capitalizeFirstLetter(userChoice)} ties with ${capitalizeFirstLetter(computerChoice)}`;
     } else if (winner === "user" || winner === "computer") {
         winner === "user" ? userWins++ : computerWins++;
-        roundData = winner === "user" ? `You won this round! ${userChoice} beats ${computerChoice}` : `You lose! ${computerChoice} beats ${userChoice}`;
+        roundData = winner === "user" ? `You won this round! ${capitalizeFirstLetter(userChoice)} beats ${capitalizeFirstLetter(computerChoice)}` : `You lose! ${capitalizeFirstLetter(computerChoice)} beats ${capitalizeFirstLetter(userChoice)}`;
     }
     roundResult.textContent = roundData;
     console.log(`Winner: ${winner}`);
@@ -177,7 +182,7 @@ function startGame() {
         roundsPlayed = 0;
         userWins = 0;
         computerWins = 0;
-        drawRounds = 0;
+        tiedRounds = 0;
     });
 
     buttons.forEach(button => {
